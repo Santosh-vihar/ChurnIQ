@@ -42,13 +42,26 @@ PALETTE = {
 }
 
 
-# ── Load artifacts ─────────────────────────────────────────────────────────────
-
-@st.cache_resource(show_spinner=False)
+@st.cache_resource(show_spinner=True)
 def load_artifacts():
+    """Load saved pipeline and metadata once and cache in session. Trains model on-the-fly if missing."""
     if not os.path.exists(PIPELINE_PATH) or not os.path.exists(METADATA_PATH):
-        return None, None
-    return joblib.load(PIPELINE_PATH), joblib.load(METADATA_PATH)
+        try:
+            from train_model import main as train_main
+            train_main()
+        except Exception as e:
+            st.error(f"Failed to auto-train model: {e}")
+            return None, None
+
+    if os.path.exists(PIPELINE_PATH) and os.path.exists(METADATA_PATH):
+        try:
+            pipeline = joblib.load(PIPELINE_PATH)
+            metadata = joblib.load(METADATA_PATH)
+            return pipeline, metadata
+        except Exception as e:
+            st.error(f"Failed to load model artifacts: {e}")
+            return None, None
+    return None, None
 
 
 # ── Prediction helpers ─────────────────────────────────────────────────────────
