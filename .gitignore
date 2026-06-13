@@ -1,0 +1,30 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Streamlit secrets — never commit
+.streamlit/secrets.toml
+
+# Artifacts — commit after training OR keep out for CI
+# artifacts/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
